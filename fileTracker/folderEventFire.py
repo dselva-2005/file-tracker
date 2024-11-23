@@ -2,7 +2,7 @@ from watchdog.events import FileSystemEventHandler
 from .file_operations import create_file_set,delete_file_set,copy_set_file,rename_set_file
 
 class FolderMonitorHandler(FileSystemEventHandler):
-    def __init__(self,folder_to_update,folder_path):
+    def __init__(self,folder_path,folder_to_update):
         self.folder_path = folder_path
         self.folder_to_update = folder_to_update
         self.operations = list()

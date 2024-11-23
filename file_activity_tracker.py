@@ -5,7 +5,7 @@ from fileTracker.folderEventFire import FolderMonitorHandler
 
 
 def monitor_folder(folder_path,folder_to_update):
-    event_handler = FolderMonitorHandler(folder_to_update,folder_path)
+    event_handler = FolderMonitorHandler(folder_path,folder_to_update)
     observer = Observer()
     observer.schedule(event_handler, folder_path, recursive=True)  # Recursive monitors subfolders
     observer.start()
