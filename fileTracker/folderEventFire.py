@@ -1,18 +1,25 @@
 from watchdog.events import FileSystemEventHandler
 from .file_operations import create_file_set,delete_file_set,copy_set_file,rename_set_file
+from datetime import datetime
+
 
 class FolderMonitorHandler(FileSystemEventHandler):
-    def __init__(self,folder_path,folder_to_update):
+    def __init__(self,folder_path,folder_to_update,label):
         self.folder_path = folder_path
         self.folder_to_update = folder_to_update
         self.operations = list()
+        self.created = int()
+        self.deleted = int()
+        self.moved = int()
         self.modified = int()
+        self.label = label
 
     def on_created(self, event):
         if '.TMP' not in event.src_path:
             if '.tmp' not in event.src_path:
                 if '~$' not in event.src_path:
                     self.operations.append({'create':event.src_path})
+                    self.created += 1
             
 
     def on_deleted(self, event):
@@ -20,6 +27,7 @@ class FolderMonitorHandler(FileSystemEventHandler):
             if '.tmp' not in event.src_path:
                 if '~$' not in event.src_path :
                     self.operations.append({'deleted':event.src_path})
+                    self.deleted += 1
                 
 
     def on_modified(self, event):
@@ -37,6 +45,7 @@ class FolderMonitorHandler(FileSystemEventHandler):
             if '.tmp' not in event.src_path and '.tmp' not in event.dest_path:
                 if '~$' not in event.src_path and '~$' not in event.dest_path:
                     self.operations.append({"moved":(event.src_path,event.dest_path)})
+                    self.moved += 1
                 
 
     def match(self):
@@ -60,7 +69,11 @@ class FolderMonitorHandler(FileSystemEventHandler):
                         case _:
                             # Default case (matches anything)
                             pass
-            print('cycle finished')
+            now = datetime.now()
+            formatted_datetime = now.strftime("%d/%m/%Y %H:%M:%S")
+            self.label.config(text=f'last updated at \n{formatted_datetime} \ncreated:{self.created},deleted:{self.deleted},moved:{self.moved},modified:{self.modified}',font=("Arial", 11))
             self.operations.clear()
-            print(self.modified)
+            self.created = 0
+            self.deleted = 0
+            self.moved = 0
             self.modified = 0
