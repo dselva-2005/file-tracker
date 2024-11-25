@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from watchdog.observers import Observer
 from fileTracker.file_operations import is_folder_accessible, check_usb
 from fileTracker.folderEventFire import FolderMonitorHandler
@@ -11,12 +11,12 @@ observer = None
 event_handler = None
 running = False
 
-def monitor(folder_path):
+def monitor(folder_path,destination):
     # Monitor function to be run every second
     if running:
-        if check_usb() and is_folder_accessible(folder_path):
+        if Path(destination).exists() and is_folder_accessible(folder_path):
             event_handler.match()  # Trigger matching action if conditions are met
-        root.after(1000, partial(monitor, folder_path))  # Keep monitoring every 1000 ms
+        root.after(1000, partial(monitor, folder_path,destination))  # Keep monitoring every 1000 ms
 
 def start():
     global observer, event_handler, running
@@ -33,21 +33,35 @@ def start():
         observer.start()
 
         # Update the label with the user input and start monitoring
-        title_label.config(text=f'Monitoring', bg="lightgreen", fg="darkgreen")
-        monitor(folder_to_monitor)  # Start folder monitoring
+        title_label.config(text=f'Monitoring', bg="#f9f9f9", fg="#00c20d")
+        monitor(folder_to_monitor,folder_to_update)  # Start folder monitoring
     else:
-        title_label.config(text=f'Invalid Source',bg="#FF6666", fg="#8B0000")
+        title_label.config(text=f'Invalid Source', bg="#FF6666", fg="#8B0000")
 
 def stop():
+    if event_handler.operations:
+        response = messagebox.askyesno("Confirmation", "Some operation are yet to sync. Operation will be synced when the external drive is connected Stopping the program will fail to update the monitored changes,are you sure you want to stop the program ?")
+        if response:
+            pass
+        else:
+            return
     global running
     running = False
     if observer:
         observer.stop()
         observer.join()  # Wait for the observer thread to stop
-    title_label.config(text=f' Stopped Monitoring',bg="#FF6666", fg="#8B0000")
+    title_label.config(text=f' Stopped Monitoring', bg="#f9f9f9", fg="#f72a2a")
     source.config(state="normal")  # Disable editing
     destination.config(state="normal")  # Disable editing
+        
 
+def on_closing():
+    # Prevent closing if the process is running
+    if running:
+        # Show a warning dialog if the user tries to close while monitoring
+        messagebox.showwarning("Warning", "Cannot close the application while monitoring is active.")
+    else:
+        root.destroy()  # Close the window if not running
 
 # Create the Tkinter window
 root = tk.Tk()
@@ -127,6 +141,9 @@ button_stop.grid(row=0, column=1, padx=10)
 # Status Label
 stats = tk.Label(root, text="", font=("Arial", 10), fg="#666666", bg="#f9f9f9")
 stats.pack(pady=(10, 0))
+
+# Bind the window close event to the on_closing function
+root.protocol("WM_DELETE_WINDOW", on_closing)
 
 # Run the Tkinter event loop
 root.mainloop()

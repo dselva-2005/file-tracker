@@ -2,10 +2,10 @@ import time
 from watchdog.observers import Observer
 from fileTracker.file_operations import is_folder_accessible,check_usb 
 from fileTracker.folderEventFire import FolderMonitorHandler
-
+from tkinter import Label
 
 def monitor_folder(folder_path,folder_to_update):
-    event_handler = FolderMonitorHandler(folder_path,folder_to_update)
+    event_handler = FolderMonitorHandler(folder_path,folder_to_update,Label())
     observer = Observer()
     observer.schedule(event_handler, folder_path, recursive=True)  # Recursive monitors subfolders
     observer.start()

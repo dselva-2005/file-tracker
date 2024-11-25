@@ -7,13 +7,13 @@ def rename_folder_with_pathlib(old_name, new_name):
     try:
         path = Path(old_name)
         path.rename(new_name)
-        pass#(f"Folder renamed from '{old_name}' to '{new_name}' successfully.")
+        print(f"Folder renamed from '{old_name}' to '{new_name}' successfully.")
     except FileNotFoundError:
-        pass#(f"The folder '{old_name}' was not found.")
+        print(f"The folder '{old_name}' was not found.")
     except PermissionError:
-        pass#(f"You don't have permission to rename '{old_name}'.")
+        print(f"You don't have permission to rename '{old_name}'.")
     except Exception as e:
-        pass#(f"Error renaming folder: {e}")
+        print(f"Error renaming folder: {e}")
 
 
 def create_file_in_folder(file_path):
@@ -25,26 +25,26 @@ def create_file_in_folder(file_path):
     with open(file_path, 'w'):
         pass  # Write content to the file
 
-    pass#(f"File '{file_path}' created successfully!")
+    print(f"File '{file_path}' created successfully!")
 
 def create_folder_with_pathlib(folder_path:Path):
     path = folder_path
     try:
         path.mkdir(parents=True, exist_ok=True)
-        pass#(f"Folder '{folder_path}' created successfully!")
+        print(f"Folder '{folder_path}' created successfully!")
     except FileExistsError:
-        pass#(f"Folder '{folder_path}' already exists!")
+        print(f"Folder '{folder_path}' already exists!")
     except Exception as e:
-        pass#(f"An error occurred: {e}")
+        print(f"An error occurred: {e}")
 
 def delete_folder_with_pathlib(folder_path):
     """Deletes a folder and its contents using pathlib and shutil."""
     path = Path(folder_path)
     if path.exists() and path.is_dir():
         shutil.rmtree(folder_path)
-        pass#(f"Folder '{folder_path}' and its contents deleted successfully!")
+        print(f"Folder '{folder_path}' and its contents deleted successfully!")
     else:
-        pass#(f"Folder '{folder_path}' does not exist or is not a directory.")
+        print(f"Folder '{folder_path}' does not exist or is not a directory.")
 
 def is_folder_accessible(folder_path):
     for root, dirs, files in os.walk(folder_path):
@@ -77,13 +77,13 @@ def copy_file(source, destination):
         if source.stat().st_size == destination.stat().st_size:
             return
         shutil.copy(source, destination)
-        pass#(f"File copied from '{source}' to '{destination}' successfully!")
+        print(f"File copied from '{source}' to '{destination}' successfully!")
     except FileNotFoundError:
-        pass#(f"Source file '{source}' does not exist!")
+        print(f"Source file '{source}' does not exist!")
     except PermissionError:
-        pass#("Permission denied! Check your access rights.")
+        print("Permission denied! Check your access rights.")
     except Exception as e:
-        pass#(f"An error occurred: {e}")
+        print(f"An error occurred: {e}")
 
 def copy_set_file(path,source,destination):
     base_path = Path(source)
@@ -102,13 +102,13 @@ def rename_file(old_name:Path, new_name):
             return
         
         file_path.rename(new_name)
-        pass#(f"File renamed from '{old_name}' to '{new_name}' successfully.")
+        print(f"File renamed from '{old_name}' to '{new_name}' successfully.")
     except FileNotFoundError:
-        pass#(f"The file '{old_name}' was not found.")
+        print(f"The file '{old_name}' was not found.")
     except PermissionError:
-        pass#(f"You don't have permission to rename '{old_name}'.")
+        print(f"You don't have permission to rename '{old_name}'.")
     except Exception as e:
-        pass#(f"Error renaming file: {e}")
+        print(f"Error renaming file: {e}")
 
 def rename_set_file(path, source, destination):
     base_path = Path(source)
@@ -133,9 +133,9 @@ def delete_file(file_path):
     """Deletes a file."""
     if os.path.exists(file_path):
         os.remove(file_path)
-        pass#(f"File '{file_path}' deleted successfully!")
+        print(f"File '{file_path}' deleted successfully!")
     else:
-        pass#(f"File '{file_path}' does not exist!")
+        print(f"File '{file_path}' does not exist!")
 
 def delete_file_set(path,source,destination):
     base_path = Path(source)
@@ -156,11 +156,11 @@ def delete_file_set(path,source,destination):
 def create_file(file_path):
     """Creates a file with the given content."""
     if os.path.exists(file_path):
-        pass#(f"File '{file_path}' already exists!")
+        print(f"File '{file_path}' already exists!")
     else:
         with open(file_path, 'w'):
             pass
-        pass#(f"File '{file_path}' created successfully!")
+        print(f"File '{file_path}' created successfully!")
 
 def create_file_set(path,source,destination):
     base_path = Path(source)
